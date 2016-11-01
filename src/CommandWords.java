@@ -12,8 +12,9 @@
 public class CommandWords
 {
     // a constant array that holds all valid command words
-    private static final String[] validCommands = {
-        "go", "quit", "help"
+    private static final String[] validCommands = 
+    {
+        "go", "quit", "help","look","eat"
     };
 
     /**
@@ -23,7 +24,18 @@ public class CommandWords
     {
         // nothing to do at the moment...
     }
-
+    /**
+     * Prints all valid commands to system.out.
+     */
+    public void showAll()
+    {
+        for (String command : validCommands) 
+        {
+            System.out.println(command + " "); 
+        }
+        System.out.println();
+    }
+    
     /**
      * Check whether a given String is a valid command word. 
      * @return true if a given string is a valid command,
