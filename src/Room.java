@@ -1,5 +1,7 @@
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -20,19 +22,34 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;
-
+    private List<Item> itemsList;
+    
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
      * "an open court yard".
      * @param description The room's description.
      */
-    public Room(String description) 
+    public Room(String description, Item... items) 
     {
+        itemsList = new ArrayList<>();
+        for (Item item : items) 
+        {
+           addItemInRoom(item);
+        }
+        
         this.description = description;
-        exits = new HashMap<String, Room>();
+        exits = new HashMap<String, Room>();        
     }
     
+    public void addItemInRoom(Item item)
+    {
+        itemsList.add(item);
+    }
+    public String getItemsInRoomAsString()
+    {
+        return "placeholder text lul";
+    }
     /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).

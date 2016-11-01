@@ -35,14 +35,17 @@ public class Game
     private void createRooms()
     {
         Room one, two, three, four, five, cellar;
-      
+        Item appleItem;
+        appleItem = new Item("Apple", "This is an apple", 2);
+        
         // create the rooms
-        one = new Room("in room one. The room to the west");
+        one = new Room("in room one. The room to the west",appleItem);
         two = new Room("in room two, the main room in the middle");
         three = new Room("in room three. The room to the north");
         four = new Room("in room four. The room to the south");
         five = new Room("in room five. The room to the east");
         cellar = new Room("stupid. hahaaa");
+        
         
         // initialise room exits
         one.setExits("east", two);
@@ -146,7 +149,8 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println("   go quit help");
+        System.out.println(parser.getAllCommands());
+
     }
     /**
      * Method called when the player used the look command.
