@@ -14,11 +14,29 @@ public class Player
     private Room currentRoom;
     private Room lastRoom;
 
-    public Room getCurrentRoom() {
+    public Player() 
+    {
+        
+    }
+
+    
+    public void setCurrentRoom(Room currentRoom) 
+    {
+        this.currentRoom = currentRoom;
+    }
+
+    public void setLastRoom(Room lastRoom) 
+    {
+        this.lastRoom = lastRoom;
+    }
+
+    public Room getCurrentRoom() 
+    {
         return currentRoom;
     }
 
-    public Room getLastRoom() {
+    public Room getLastRoom() 
+    {
         return lastRoom;
     }
     
