@@ -1,3 +1,7 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -19,7 +23,9 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
-        
+    private Room lastRoom;
+    private List<Room> PreviouslyVisitedRooms;
+    
     /**
      * Create the game and initialise its internal map.
      */
@@ -27,6 +33,7 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        PreviouslyVisitedRooms = new ArrayList<>();
     }
 
     /**
@@ -35,11 +42,10 @@ public class Game
     private void createRooms()
     {
         Room one, two, three, four, five, cellar;
-        Item appleItem;
-        appleItem = new Item("Apple", "This is an apple", 2);
+        
         
         // create the rooms
-        one = new Room("in room one. The room to the west",appleItem);
+        one = new Room("in room one. The room to the west");
         two = new Room("in room two, the main room in the middle");
         three = new Room("in room three. The room to the north");
         four = new Room("in room four. The room to the south");
@@ -63,8 +69,16 @@ public class Game
         five.setExits("west", two);
         
         cellar.setExits("up", three);
-
+        
+        Item appleItem = new Item("Apple", "This is an apple", 2);
+        Item Book = new Item("Book", "This is a book", 2);
+        
+        two.addItemInRoom(appleItem);
+        two.addItemInRoom(Book);
+        
         currentRoom = one;  // start game outside
+        
+                
     }
 
     /**
@@ -128,6 +142,10 @@ public class Game
         {
             eat();
         }
+        else if (commandWord.equals("back")) 
+        {
+            back();
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -146,7 +164,7 @@ public class Game
     private void printHelp() 
     {
         System.out.println("You are lost. You are alone. You wander");
-        System.out.println("around at the university.");
+        System.out.println("around in some unknown building.");
         System.out.println();
         System.out.println("Your command words are:");
         System.out.println(parser.getAllCommands());
@@ -164,6 +182,21 @@ public class Game
      * Try to go in one direction. If there is an exit, enter
      * the new room, otherwise print an error message.
      */
+    private void back()
+    {
+        if (PreviouslyVisitedRooms.size() != 0) 
+        {
+            currentRoom = PreviouslyVisitedRooms.get(PreviouslyVisitedRooms.size()-1);
+            PreviouslyVisitedRooms.remove(PreviouslyVisitedRooms.size()-1);
+            System.out.println(currentRoom.getLongDescription());
+        }
+        else
+        {
+            System.out.println("Can't go back now.");
+        }
+        
+    }
+    
     private void goRoom(Command command) 
     {
         if(!command.hasSecondWord()) {
@@ -181,6 +214,8 @@ public class Game
             System.out.println("There is no door!");
         }
         else {
+            
+            handleLastRoomStuff();  
             currentRoom = nextRoom;
             
             System.out.println(currentRoom.getLongDescription());
@@ -206,5 +241,12 @@ public class Game
         else {
             return true;  // signal that we want to quit
         }
+    }
+    
+    private void handleLastRoomStuff()
+    {
+        lastRoom = currentRoom;
+        PreviouslyVisitedRooms.add(lastRoom);
+
     }
 }

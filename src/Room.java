@@ -91,7 +91,20 @@ public class Room
     {
         return description;
     }
-    
+    /**
+     * Returns a string of all the items in the room, of the form
+     *      Apple Pizza
+     * @return A string of items in the room
+     */
+    public String getItemInfo()
+    {
+        String items = "Item(s): ";
+        for (Item item : itemsList) 
+        {
+            items += " " + item.getName();
+        }
+        return items;
+    }
     /**
      * Return a long description of  this room, of the form:
      *      You are in the kitchen.
@@ -100,6 +113,6 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ". \n" + getExitString();
+        return "\nYou are " + description + ". \n" + getItemInfo() + " \n" + getExitString() + ".";
     }
 }
