@@ -98,7 +98,7 @@ public class Room
      */
     public String getItemInfo()
     {
-        String items = "Item(s): ";
+        String items = "Item(s):";
         for (Item item : itemsList) 
         {
             items += " " + item.getName();

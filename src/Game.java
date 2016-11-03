@@ -72,10 +72,15 @@ public class Game
         cellar.setExits("up", three);
         
         Item appleItem = new Item("Apple", "This is an apple", 2);
-        Item Book = new Item("Book", "This is a book", 2);
+        Item Pineapple = new Item("Pineapple", "This is a Pineapple", 4);
+        Item Pen = new Item("Pen", "This is a pen", 1);
+        Item Pen2 = new Item("Pen", "This is a pen", 1);
         
         two.addItemInRoom(appleItem);
-        two.addItemInRoom(Book);
+        five.addItemInRoom(Pineapple);
+        cellar.addItemInRoom(Pen);
+        cellar.addItemInRoom(Pen2);
+        
         
         //currentRoom = one;  // start game outside
         player.setCurrentRoom(one);
