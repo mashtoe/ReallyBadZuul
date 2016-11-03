@@ -21,9 +21,8 @@ import java.util.List;
 
 public class Game 
 {
+    private Player player;
     private Parser parser;
-    private Room currentRoom;
-    private Room lastRoom;
     private List<Room> PreviouslyVisitedRooms;
     
     /**
@@ -31,8 +30,10 @@ public class Game
      */
     public Game() 
     {
-        createRooms();
         parser = new Parser();
+        player = new Player();
+        createRooms();
+        
         PreviouslyVisitedRooms = new ArrayList<>();
     }
 
@@ -76,7 +77,8 @@ public class Game
         two.addItemInRoom(appleItem);
         two.addItemInRoom(Book);
         
-        currentRoom = one;  // start game outside
+        //currentRoom = one;  // start game outside
+        player.setCurrentRoom(one);
         
                 
     }
@@ -92,7 +94,8 @@ public class Game
         // execute them until the game is over.
                 
         boolean finished = false;
-        while (! finished) {
+        while (! finished) 
+        {
             Command command = parser.getCommand();
             finished = processCommand(command);
         }
@@ -110,7 +113,8 @@ public class Game
         System.out.println("Type 'help' if you need help.");
         System.out.println();
         
-        System.out.println(currentRoom.getLongDescription());
+        //System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
 
     /**
@@ -176,7 +180,7 @@ public class Game
      */
     private void look()
     {
-        System.out.println(currentRoom.getLongDescription());
+        System.out.println(player.getCurrentRoom().getLongDescription());
     }
     /** 
      * Try to go in one direction. If there is an exit, enter
@@ -186,9 +190,10 @@ public class Game
     {
         if (PreviouslyVisitedRooms.size() != 0) 
         {
-            currentRoom = PreviouslyVisitedRooms.get(PreviouslyVisitedRooms.size()-1);
+            //currentRoom = PreviouslyVisitedRooms.get(PreviouslyVisitedRooms.size()-1);
+            player.setCurrentRoom(PreviouslyVisitedRooms.get(PreviouslyVisitedRooms.size()-1));
             PreviouslyVisitedRooms.remove(PreviouslyVisitedRooms.size()-1);
-            System.out.println(currentRoom.getLongDescription());
+            System.out.println(player.getCurrentRoom().getLongDescription());
         }
         else
         {
@@ -208,7 +213,7 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
@@ -216,9 +221,9 @@ public class Game
         else {
             
             handleLastRoomStuff();  
-            currentRoom = nextRoom;
+            player.setCurrentRoom(nextRoom);
             
-            System.out.println(currentRoom.getLongDescription());
+            System.out.println(player.getCurrentRoom().getLongDescription());
         }
     }
     
@@ -245,8 +250,11 @@ public class Game
     
     private void handleLastRoomStuff()
     {
-        lastRoom = currentRoom;
-        PreviouslyVisitedRooms.add(lastRoom);
+        //lastRoom = currentRoom;
+        player.setLastRoom(player.getCurrentRoom());
+        
+        //PreviouslyVisitedRooms.add(lastRoom);
+        PreviouslyVisitedRooms.add(player.getLastRoom());
 
     }
 }
