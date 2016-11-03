@@ -105,6 +105,37 @@ public class Room
         }
         return items;
     }
+    
+    public void removeItem(String item)
+    {
+        for (int i = 0; i < itemsList.size(); i++) 
+        {
+            if(itemsList.get(i).getName().equals(item)) 
+            {
+                itemsList.remove(i);
+                
+            }
+        }    
+    }
+    
+    public Item getItem(String itemString)
+    {
+        Item itemOb = null;
+        
+        for (int i = 0; i < itemsList.size(); i++) 
+        {
+            if(itemsList.get(i).getName().equals(itemString)) 
+            {
+                itemOb = itemsList.get(i);
+            }
+        }
+        return itemOb;
+    }
+    
+    public List<Item> getItemsList() 
+    {
+        return itemsList;
+    }
     /**
      * Return a long description of  this room, of the form:
      *      You are in the kitchen.
