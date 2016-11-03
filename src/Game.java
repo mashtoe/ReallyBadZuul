@@ -23,7 +23,7 @@ public class Game
 {
     private Player player;
     private Parser parser;
-    private List<Room> PreviouslyVisitedRooms;
+    
     
     /**
      * Create the game and initialise its internal map.
@@ -34,7 +34,7 @@ public class Game
         player = new Player();
         createRooms();
         
-        PreviouslyVisitedRooms = new ArrayList<>();
+        
     }
 
     /**
@@ -142,14 +142,23 @@ public class Game
         {
             look();
         }
-        else if (commandWord.equals("eat")) 
+        else if (commandWord.equals("helditems")) 
         {
-            eat();
+            helditems();
         }
         else if (commandWord.equals("back")) 
         {
             back();
         }
+        else if (commandWord.equals("pickup")) 
+        {
+            pickup(command);
+        }
+        else if (commandWord.equals("drop")) 
+        {
+            drop(command);
+        }
+        
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -182,17 +191,17 @@ public class Game
     {
         System.out.println(player.getCurrentRoom().getLongDescription());
     }
-    /** 
-     * Try to go in one direction. If there is an exit, enter
-     * the new room, otherwise print an error message.
+    /**
+     * Go to the room you were in prior to where you are now. 
+     * The method can handle consecutive back commands all the way.
      */
     private void back()
     {
-        if (PreviouslyVisitedRooms.size() != 0) 
+        if (player.getPreviouslyVisitedRooms().size() != 0) 
         {
             //currentRoom = PreviouslyVisitedRooms.get(PreviouslyVisitedRooms.size()-1);
-            player.setCurrentRoom(PreviouslyVisitedRooms.get(PreviouslyVisitedRooms.size()-1));
-            PreviouslyVisitedRooms.remove(PreviouslyVisitedRooms.size()-1);
+            player.setCurrentRoom(player.getPreviouslyVisitedRooms().get(player.getPreviouslyVisitedRooms().size()-1));
+            player.getPreviouslyVisitedRooms().remove(player.getPreviouslyVisitedRooms().size()-1);
             System.out.println(player.getCurrentRoom().getLongDescription());
         }
         else
@@ -201,10 +210,14 @@ public class Game
         }
         
     }
-    
+    /** 
+     * Try to go in one direction. If there is an exit, enter
+     * the new room, otherwise print an error message.
+     */
     private void goRoom(Command command) 
     {
-        if(!command.hasSecondWord()) {
+        if(!command.hasSecondWord()) 
+        {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
             return;
@@ -227,10 +240,75 @@ public class Game
         }
     }
     
-    private void eat()
+    private void pickup(Command command)
     {
-        System.out.println("Eating some apples");
+        if (player.getCurrentRoom().getItemsList().size() > 0) 
+        {
+            if(!command.hasSecondWord()) 
+            {
+                // if there is no second word, we don't know what to pickup...
+                System.out.println("Pick up what?");
+                return;
+            }
+            String item = command.getSecondWord();
+            Item itemObject = player.getCurrentRoom().getItem(item);
+            if( itemObject == null) 
+            {
+                System.out.println("No such item in this room");
+                return;
+            }
+            player.pickUpItem(itemObject);
+            
+            player.getCurrentRoom().removeItem(item);
+            
+            System.out.println("Succesfully picked up: " + item);           
+        }
+        else
+        {
+            System.out.println("No item in room to pick up");
+        }        
     }
+    private void drop(Command command)
+    {
+        if (player.getItemsHeld().size() > 0) 
+        {
+            if(!command.hasSecondWord()) 
+            {
+                // if there is no second word, we don't know what to pickup...
+                System.out.println("Drop what?");
+                return;
+            }
+            String item = command.getSecondWord();
+            Item itemObject = player.getItem(item);
+            if( itemObject == null) 
+            {
+                System.out.println("You are not holding a " + item);
+                return;
+            }
+            player.getCurrentRoom().addItemInRoom(itemObject);
+            player.removeItem(item);
+            System.out.println("You dropped your " + item);
+        }
+        else
+        {
+            System.out.println("No item held to drop");
+        }  
+    }
+    
+    /**
+     * Method called when you type eat in the console.
+     * Prints "Eating some apples".
+     */
+    private void helditems()
+    {
+        String playerItems = "Items held:";
+        for (int i = 0; i < player.getItemsHeld().size(); i++) 
+        {
+            playerItems += " " + player.getItemsHeld().get(i).getName();
+        }
+        System.out.println(playerItems);
+    }
+    
     
     /** 
      * "Quit" was entered. Check the rest of the command to see
@@ -254,7 +332,7 @@ public class Game
         player.setLastRoom(player.getCurrentRoom());
         
         //PreviouslyVisitedRooms.add(lastRoom);
-        PreviouslyVisitedRooms.add(player.getLastRoom());
+        player.getPreviouslyVisitedRooms().add(player.getLastRoom());
 
     }
 }
